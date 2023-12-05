@@ -1,0 +1,25 @@
+﻿Anomaly detection
+
+
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+from sklearn.ensemble import IsolationForest
+df=pd.read_csv("C:/Users/HP/Downloads/Final Practical ML/Final Practical ML/cricket scoredataset.csv")
+df.head()
+
+
+model=IsolationForest(n_estimators=1000,max_samples='auto',contamination=float(0.2))
+model.fit(df[['Score']])
+
+
+outliers_counter = (df[df['Score'] > 36])
+outliers_counter
+
+
+plt.scatter(df['Overs'],df['Score'])
+
+
+df['anamoly_scores']=model.decision_function(df[['Score']])
+df['anamoly']=model.predict(df[['Score']])
+df.head(20)

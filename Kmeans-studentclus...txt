@@ -1,0 +1,47 @@
+﻿K-Means
+
+
+#K-means
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+df=pd.read_csv('C:/Users/HP/Downloads/student_clustering.csv')
+df.head()
+
+
+df.shape
+
+
+plt.scatter (df['cgpa'],df['iq'])
+
+
+from sklearn.cluster import KMeans
+
+
+wcss = []
+for i in range (1,11):
+    km=KMeans(n_clusters=i,n_init=10)
+    km.fit_predict(df)
+    wcss.append(km.inertia_)
+wcss
+
+
+plt.plot(range(1,11),wcss)
+
+
+x=df.iloc[:,:].values
+km = KMeans(n_clusters=4,n_init=10)
+y_means = km.fit_predict(x)
+y_means
+
+
+x[y_means==0]
+x[y_means==1]
+x[y_means==2]
+x[y_means==3]
+x[y_means==3,0]
+x[y_means==3,1]
+plt.scatter(x[y_means==0,0],x[y_means==0,1],color='blue')
+plt.scatter(x[y_means==1,0],x[y_means==1,1],color='red')
+plt.scatter(x[y_means==2,0],x[y_means==2,1],color='green')
+plt.scatter(x[y_means==3,0],x[y_means==3,1],color='magenta')
