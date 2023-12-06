@@ -1,94 +1,89 @@
-﻿SVM - Social Networking
-
-
-#SVM
+# Import necessary libraries
 import pandas as pd
-df = pd.read_csv("C:/Users/HP/Downloads/Social_Network_Ads.csv")
-df.head()
-
-
-df.shape
-
-
-x = df.iloc[:,2:4]
-y = df.iloc[:,4]
-x.head()
-
-
-x.shape
-
-
+import matplotlib.pyplot as plt
+import numpy as np
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import classification_report
 from sklearn.preprocessing import StandardScaler
 from sklearn.svm import SVC
 
+# Load the social networking dataset from the specified CSV file into a Pandas DataFrame
+df = pd.read_csv("C:/Users/HP/Downloads/Social_Network_Ads.csv")
 
-x_train,x_test,y_train,y_test = train_test_split(x,y,test_size=0.2)
+# Display the first few rows of the DataFrame
+df.head()
 
+# Separate features (x) and target variable (y)
+x = df.iloc[:, 2:4]
+y = df.iloc[:, 4]
 
-cs = StandardScaler()
-x_train = cs.fit_transform(x_train)
-x_test = cs.fit_transform(x_test)
+# Display the shape of the DataFrame
+df.shape
 
+# Split the data into training and testing sets (80% training, 20% testing)
+x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.2, random_state=0)
 
-#LINEAR
+# Standardize the features using StandardScaler
+scaler = StandardScaler()
+x_train = scaler.fit_transform(x_train)
+x_test = scaler.fit_transform(x_test)
 
+# LINEAR Kernel
+# Create an SVM classifier with a linear kernel
+svc_linear = SVC(kernel='linear', random_state=0)
+svc_linear.fit(x_train, y_train)
+y_pred_linear = svc_linear.predict(x_test)
 
-svc = SVC(kernel = 'linear',random_state=0)
-svc.fit(x_train,y_train)
-y_pred = svc.predict(x_test)
-print(classification_report(y_test,y_pred))
+# Print classification report for the linear kernel
+print("Classification Report (Linear Kernel):")
+print(classification_report(y_test, y_pred_linear))
 
-
-import numpy as np
-plt.scatter(x_test[:,0],x_test[:,1],c=y_test)
-w=svc.coef_[0]
-a=w[0]/w[1]
-x=np.linspace(-2.5,2.5)
-y=a*x-(svc.intercept_[0]/w[1])
-plt.plot(x,y)
+# Plot the decision boundary for the linear kernel
+plt.scatter(x_test[:, 0], x_test[:, 1], c=y_test)
+w_linear = svc_linear.coef_[0]
+a_linear = w_linear[0] / w_linear[1]
+x_linear = np.linspace(-2.5, 2.5)
+y_linear = a_linear * x_linear - (svc_linear.intercept_[0] / w_linear[1])
+plt.plot(x_linear, y_linear)
+plt.title('SVM with Linear Kernel')
 plt.show()
 
+# RBF (Radial Basis Function) Kernel
+# Create an SVM classifier with an RBF kernel
+svc_rbf = SVC(kernel='rbf', random_state=0)
+svc_rbf.fit(x_train, y_train)
+y_pred_rbf = svc_rbf.predict(x_test)
 
+# Print classification report for the RBF kernel
+print("Classification Report (RBF Kernel):")
+print(classification_report(y_test, y_pred_rbf))
 
-
-
-
-#RBF -  radial basis function 
-
-
-svc = SVC(kernel = 'rbf',random_state=0)
-svc.fit(x_train,y_train)
-y_pred = svc.predict(x_test)
-print(classification_report(y_test,y_pred))
-
-
-plt.scatter(x_test[:,0],x_test[:,1],c=y_test)
-w=svc.dual_coef_[0]
-a=w[0]/w[1]
-x=np.linspace(-2.5,2.5)
-y=a*x-(svc.intercept_[0]/w[1])
-plt.plot(x,y)
+# Plot the decision boundary for the RBF kernel
+plt.scatter(x_test[:, 0], x_test[:, 1], c=y_test)
+w_rbf = svc_rbf.dual_coef_[0]
+a_rbf = w_rbf[0] / w_rbf[1]
+x_rbf = np.linspace(-2.5, 2.5)
+y_rbf = a_rbf * x_rbf - (svc_rbf.intercept_[0] / w_rbf[1])
+plt.plot(x_rbf, y_rbf)
+plt.title('SVM with RBF Kernel')
 plt.show()
 
+# POLY (Polynomial) Kernel
+# Create an SVM classifier with a polynomial kernel
+svc_poly = SVC(kernel='poly')
+svc_poly.fit(x_train, y_train)
+y_pred_poly = svc_poly.predict(x_test)
 
-#POLY
+# Print classification report for the polynomial kernel
+print("Classification Report (Polynomial Kernel):")
+print(classification_report(y_test, y_pred_poly))
 
-
-svc = SVC(kernel = 'poly')
-svc.fit(x_train,y_train)
-y_pred = svc.predict(x_test)
-print(classification_report(y_test,y_pred))
-
-
-plt.scatter(x_test[:,0],x_test[:,1],c=y_test)
-w=svc.dual_coef_[0]
-a=w[0]/w[1]
-x=np.linspace(-2.5,2.5)
-y=a*x-(svc.intercept_[0]/w[1])
-plt.plot(x,y)
+# Plot the decision boundary for the polynomial kernel
+plt.scatter(x_test[:, 0], x_test[:, 1], c=y_test)
+w_poly = svc_poly.dual_coef_[0]
+a_poly = w_poly[0] / w_poly[1]
+x_poly = np.linspace(-2.5, 2.5)
+y_poly = a_poly * x_poly - (svc_poly.intercept_[0] / w_poly[1])
+plt.plot(x_poly, y_poly)
+plt.title('SVM with Polynomial Kernel')
 plt.show()
-
-
-________________
