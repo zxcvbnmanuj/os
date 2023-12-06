@@ -1,25 +1,38 @@
 ﻿Anomaly detection
 
-
+# Import necessary libraries
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 from sklearn.ensemble import IsolationForest
-df=pd.read_csv("C:/Users/HP/Downloads/Final Practical ML/Final Practical ML/cricket scoredataset.csv")
+
+# Load the cricket score dataset from the specified CSV file into a Pandas DataFrame
+df = pd.read_csv("C:/Users/HP/Downloads/Final Practical ML/Final Practical ML/cricket scoredataset.csv")
+
+# Display the first few rows of the DataFrame
 df.head()
 
+# Create an Isolation Forest model with hyperparameters
+# n_estimators: Number of base estimators (trees) in the ensemble
+# max_samples: The number of samples to draw to train each base estimator
+# contamination: The proportion of outliers in the dataset (assumed contamination)
+model = IsolationForest(n_estimators=1000, max_samples='auto', contamination=float(0.2))
 
-model=IsolationForest(n_estimators=1000,max_samples='auto',contamination=float(0.2))
+# Fit the Isolation Forest model on the 'Score' column of the dataset
 model.fit(df[['Score']])
 
-
+# Identify outliers by filtering data points with a 'Score' greater than 36
 outliers_counter = (df[df['Score'] > 36])
+
+# Display the identified outliers
 outliers_counter
 
+# Scatter plot of 'Overs' against 'Score'
+plt.scatter(df['Overs'], df['Score'])
 
-plt.scatter(df['Overs'],df['Score'])
+# Create new columns in the DataFrame for anomaly scores and predictions
+df['anomaly_scores'] = model.decision_function(df[['Score']])
+df['anomaly'] = model.predict(df[['Score']])
 
-
-df['anamoly_scores']=model.decision_function(df[['Score']])
-df['anamoly']=model.predict(df[['Score']])
+# Display the DataFrame with anomaly scores and predictions
 df.head(20)
