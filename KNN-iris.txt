@@ -1,43 +1,42 @@
 ﻿KNN
 
-
-# KNN
+# Import necessary libraries
 import numpy as np
+import pandas as pd
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.metrics import classification_report, confusion_matrix
-import pandas as pd
 
-
-# Load the dataset
+# Load the dataset from the specified CSV file into a Pandas DataFrame
 url = "C:/Users/HP/Downloads/iris_csv.csv"
 df = pd.read_csv(url)
-# Define feature columns and target variable
-X = df.iloc[:, :-1].values
-y = df.iloc[:, 4].values
 
+# Define feature columns (X) and target variable (y)
+X = df.iloc[:, :-1].values  # Features
+y = df.iloc[:, 4].values    # Target variable
 
-# Split the data into training and testing sets
+# Split the data into training and testing sets (80% training, 20% testing)
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=4)
 
-
-# Standardize the features
+# Standardize the features using StandardScaler
 scaler = StandardScaler()
-scaler.fit(x)
-X_train = scaler.fit_transform(X_train)
+
+# Fit the scaler on the training data and transform both training and testing sets
+scaler.fit(X_train)
+X_train = scaler.transform(X_train)
 X_test = scaler.transform(X_test)
 
-
-# Create and train the KNeighborsClassifier
+# Create and train the KNeighborsClassifier with 5 neighbors
 classifier = KNeighborsClassifier(n_neighbors=5)
 classifier.fit(X_train, y_train)
-
 
 # Make predictions on the test set
 y_pred = classifier.predict(X_test)
 
-
-# Evaluate the classifier
+# Evaluate the classifier performance
+print("Classification Report:")
 print(classification_report(y_test, y_pred))
+
+print("\nConfusion Matrix:")
 print(confusion_matrix(y_test, y_pred))
