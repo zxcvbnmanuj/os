@@ -1,54 +1,56 @@
 ﻿Naive Bayes credit card
 
-
-# Naive bayes Credit card
+# Import necessary libraries
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
 from matplotlib import gridspec
+from sklearn.model_selection import train_test_split
+from sklearn.naive_bayes import GaussianNB
+from sklearn.metrics import classification_report
 
-
+# Load the credit card dataset from the specified CSV file into a Pandas DataFrame
 df = pd.read_csv('C:/Users/HP/Downloads/Final Practical ML/Final Practical ML/creditcard.csv')
 
-
+# Display the first few rows of the DataFrame
 df.head()
 
+# Separate fraud and valid transactions
+fraud = df[df["Class"] == 1]
+valid = df[df["Class"] == 0]
 
-fraud=df[df["Class"]==1]
-valid=df[df["Class"]==0]
-outlierfrac =len(fraud)/float (len(valid))
+# Calculate the fraction of fraud cases in the dataset
+outlier_frac = len(fraud) / float(len(valid))
 
+# Display the number of fraud and valid cases
+print('Fraud cases: ', format(len(fraud)))
+print('Valid cases: ', format(len(valid)))
 
-print('Fraud cases : ' , format(len(fraud)))
-print('Fraud cases : ' , format(len(valid)))
-
-
-correl=df.corr()
-fig = plt.figure(figsize=(8,8))
-sns.heatmap(correl,vmax=0.2,square =True)
+# Calculate and visualize the correlation matrix
+correl = df.corr()
+fig = plt.figure(figsize=(8, 8))
+sns.heatmap(correl, vmax=0.2, square=True)
 plt.show()
 
+# Separate features (x) and target variable (y)
+x = df.drop(['Class'], axis=1)
+y = df['Class']
 
-x=df.drop(['Class'],axis=1)
-y=df['Class']
-
-
+# Display the shape of features and target variable
 print(x.shape)
 print(y.shape)
 
+# Split the data into training and testing sets (80% training, 20% testing)
+x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.2, random_state=10)
 
-from sklearn.model_selection import train_test_split
-x_train,x_test,y_train,y_test=train_test_split(x,y,test_size=0.2,random_state=10)
-x_train
-x_test
-y_train
-y_test
+# Create and train the Gaussian Naive Bayes model
+gb = GaussianNB()
+gb.fit(x_train, y_train)
 
+# Make predictions on the training set
+pred_train = gb.predict(x_train)
 
-from sklearn.naive_bayes import GaussianNB
-gb=GaussianNB()
-gb.fit(x_train,y_train)
-pred=gb.predict(x_train)
-from sklearn.metrics import classification_report
-print(classification_report(y_train,pred))
+# Evaluate the classifier on the training set
+print("Classification Report on Training Set:")
+print(classification_report(y_train, pred_train))
